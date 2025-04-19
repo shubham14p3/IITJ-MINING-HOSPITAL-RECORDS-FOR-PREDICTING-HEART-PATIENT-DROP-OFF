@@ -4,8 +4,8 @@ import logo from '../Design-of-New-Logo-of-IITJ-2.png';
 
 const contributors = [
   { name: 'Shubham Raj', id: 'M24DE3076' },
-  { name: 'Suraj Mourya', id: 'G23AI2116' },
-  { name: 'Jatin Shrivas', id: 'G23AI2094' },
+  { name: 'Suraj Mourya', id: 'M24DE3080' },
+  { name: 'Jatin Shrivas', id: 'M24DE3039' },
 ];
 
 export default function Footer() {
@@ -29,7 +29,7 @@ export default function Footer() {
           <img src={logo} alt="IITJ Logo" width={40} />
         </Box>
         <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 'bold', ml: 1 }}>
-          © 2025 IITJ – Mining Hospital Records for Predicting Patient Drop‑off
+          © 2025 IITJ – Mining Hospital Records for Predicting Heart Patient Drop‑off
         </Typography>
       </Box>
 

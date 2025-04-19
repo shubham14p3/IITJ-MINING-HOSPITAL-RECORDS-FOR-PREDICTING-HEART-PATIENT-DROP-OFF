@@ -83,8 +83,11 @@ export default function DataVisualization() {
     <Layout>
       <Container sx={{ py: 4 }}>
         {/* Correlation Matrix Section */}
-        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
+        <Typography variant="h6" align="center" sx={{ fontWeight: 'bold', mb: 1 }}>
           Correlation Matrix
+        </Typography>
+        <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
+          Shows how strongly each feature is related (from -1 to 1), with stronger ties highlighted.
         </Typography>
         <Card sx={{ mb: 4, p: 3, boxShadow: 6, borderRadius: 4, bgcolor: '#f0f8ff' }}>
           {loadingCorr ? (
@@ -111,7 +114,10 @@ export default function DataVisualization() {
                         {columnNameMap[metric] || metric.toUpperCase()}
                       </TableCell>
                       {cols.map(col => (
-                        <TableCell key={col} sx={{ py: 1, textAlign: 'right', bgcolor: Math.abs(corr[col][metric]) > 0.5 ? '#e3f2fd' : 'inherit' }}>
+                        <TableCell
+                          key={col}
+                          sx={{ py: 1, textAlign: 'right', bgcolor: Math.abs(corr[col][metric]) > 0.5 ? '#e3f2fd' : 'inherit' }}
+                        >
                           {corr[col][metric].toFixed(2)}
                         </TableCell>
                       ))}
@@ -124,8 +130,11 @@ export default function DataVisualization() {
         </Card>
 
         {/* Histograms Section */}
-        <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
+        <Typography variant="h6" align="center" sx={{ fontWeight: 'bold', mb: 1 }}>
           Feature Histograms
+        </Typography>
+        <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
+          Visual distribution of each feature—click the image for a larger view or download.
         </Typography>
         <Card sx={{ p: 3, boxShadow: 6, borderRadius: 4, textAlign: 'center', bgcolor: '#fff3e0' }}>
           {!histLoaded && (
@@ -176,13 +185,9 @@ export default function DataVisualization() {
           </Dialog>
         </Card>
 
-
       </Container>
       {/* Navigation Buttons */}
-      <Box mt={4}
-        display="flex"
-        justifyContent="center"
-        sx={{ gap: 1 }}>
+      <Box mt={4} display="flex" justifyContent="center" sx={{ gap: 1 }}>
         <Button variant="contained" color="primary" onClick={() => navigate('/data-clean')}>
           Back
         </Button>

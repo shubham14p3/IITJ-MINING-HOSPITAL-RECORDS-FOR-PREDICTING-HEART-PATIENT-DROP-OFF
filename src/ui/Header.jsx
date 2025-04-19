@@ -51,7 +51,7 @@ const Header = () => {
             "&:hover": { color: "#2196f3" }, // Change color on hover
           }}
         >
-          IITJ - MINING HOSPITAL RECORDS FOR PREDICTING PATIENT DROP-OFF
+          IITJ - MINING HOSPITAL RECORDS FOR PREDICTING HEART PATIENT DROP-OFF
         </Typography>
       </Link>
 

@@ -162,7 +162,7 @@ function DataAnalysis() {
         }}
       >
         <Typography variant="h6" align="center" sx={{ fontWeight: "bold", color: "#333", mb: 1 }}>
-          Individual Data Sets
+          Original Data Sets
         </Typography>
         <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
           Use the tabs to switch between datasets, adjust rows per page, and navigate pages.

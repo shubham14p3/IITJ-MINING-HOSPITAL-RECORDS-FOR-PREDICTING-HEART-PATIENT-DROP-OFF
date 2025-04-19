@@ -21,15 +21,14 @@ function Home() {
 
   const handleLogin = () => {
     const validCredentials = [
-      { id: "g23ai2087", password: "g23ai2087" },
-      { id: "g23ai2028", password: "g23ai2028" },
-      { id: "g23ai2126", password: "g23ai2126" },
-      { id: "g23ai2094", password: "g23ai2094" },
-      { id: "g23ai2018", password: "g23ai2018" },
-      { id: "g23ai2117", password: "g23ai2117" },
+      { id: "M24DE3076", password: "M24DE3076" },
+      { id: "M24DE3080", password: "M24DE3080" },
+      { id: "M24DE3039", password: "M24DE3039" },
+      { id: "m24de3076", password: "m24de3076" },
+      { id: "m24de3080", password: "m24de3080" },
+      { id: "m24de3039", password: "m24de3039" },
       { id: "admin", password: "admin" },
-      { id: "", password: "" }, // Allow empty credentials
-    ];
+      { id: "", password: "" },];
 
     const isValid = validCredentials.some(
       (cred) => cred.id === loginId && cred.password === loginPassword
@@ -193,7 +192,7 @@ function Home() {
                     Project Report on
                   </Typography>
                   <Typography variant="h6" sx={{ mt: 2 }}>
-                  MINING HOSPITAL RECORDS FOR PREDICTING PATIENT DROP-OFF
+                    MINING HOSPITAL RECORDS FOR PREDICTING HEART PATIENT DROP-OFF
                   </Typography>
                 </Box>
               </Box>
@@ -218,7 +217,7 @@ function Home() {
                   }}
                 >
                   Welcome to <br />
-                  MINING HOSPITAL RECORDS FOR PREDICTING PATIENT DROP-OFF
+                  MINING HOSPITAL RECORDS FOR PREDICTING HEART PATIENT DROP-OFF
                 </Typography>
                 <Button
                   variant="contained"
