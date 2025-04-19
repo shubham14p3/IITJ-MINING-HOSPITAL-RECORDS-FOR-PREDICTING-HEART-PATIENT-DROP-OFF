@@ -19,6 +19,7 @@ export default function DataCleaning() {
     const [missing, setMissing] = useState({});
     const [corr, setCorr] = useState({});
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchClean = async () => {
             try {
@@ -57,8 +58,12 @@ export default function DataCleaning() {
     return (
         <Layout>
             <Container sx={{ py: 4 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
+                {/* Missing Values Section */}
+                <Typography variant="h6" align="center" sx={{ fontWeight: 'bold', mb: 1 }}>
                     Missing Values
+                </Typography>
+                <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
+                    This table shows how many values are missing (empty) in each column.
                 </Typography>
                 <Card sx={{ mb: 4, p: 3, boxShadow: 4, borderRadius: 4 }}>
                     <Box sx={{ maxHeight: '300px', overflowY: 'auto', overflowX: 'auto' }}>
@@ -81,8 +86,12 @@ export default function DataCleaning() {
                     </Box>
                 </Card>
 
-                <Typography variant="h6" sx={{ fontWeight: 'bold', mb: 2 }}>
+                {/* Correlation Matrix Section */}
+                <Typography variant="h6" align="center" sx={{ fontWeight: 'bold', mb: 1 }}>
                     Correlation Matrix (without fbs)
+                </Typography>
+                <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
+                    This matrix shows how each variable relates to the others (from -1 to 1).
                 </Typography>
                 <Card sx={{ p: 3, boxShadow: 4, borderRadius: 4 }}>
                     <Box sx={{ maxHeight: '400px', overflowY: 'auto', overflowX: 'auto' }}>
@@ -111,14 +120,21 @@ export default function DataCleaning() {
                     </Box>
                 </Card>
             </Container>
-            <Box marginTop={4} display="flex" justifyContent="space-between">
-                <Button variant="contained" color="primary" onClick={() => navigate("/data-info")}>
+
+            {/* Navigation Buttons */}
+            <Box mt={4}
+                display="flex"
+                justifyContent="center"
+                sx={{ gap: 1 }}>
+                <Button variant="contained" color="primary" onClick={() => navigate('/data-info')}>
                     Back
                 </Button>
-                <Button variant="contained" color="secondary" onClick={() => navigate("/data-visualization")}>
+                <Button variant="contained" color="secondary" onClick={() => navigate('/data-visualization')}>
                     Next
                 </Button>
             </Box>
+            <br />
+            <br />
         </Layout>
     );
 }

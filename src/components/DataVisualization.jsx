@@ -179,7 +179,10 @@ export default function DataVisualization() {
 
       </Container>
       {/* Navigation Buttons */}
-      <Box mt={4} display="flex" justifyContent="space-between">
+      <Box mt={4}
+        display="flex"
+        justifyContent="center"
+        sx={{ gap: 1 }}>
         <Button variant="contained" color="primary" onClick={() => navigate('/data-clean')}>
           Back
         </Button>
@@ -187,6 +190,8 @@ export default function DataVisualization() {
           Next
         </Button>
       </Box>
+      <br />
+      <br />
     </Layout>
   );
 }

@@ -9,36 +9,32 @@ const Layout = ({ children }) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100vh', // Full viewport height
-        overflow: 'hidden', // Prevent parent scrolling
+        minHeight: '100vh',
+        // width: '100vw',
+        backgroundColor: '#d5f5f5',
       }}
     >
       {/* Header */}
-      <Box
-        sx={{
-          height: '10%', // Fixed height for the header
-          width: '100%',
-          position: 'relative',
-        }}
-      >
+      <Box sx={{ flexShrink: 0, width: '100%' }}>
         <Header />
       </Box>
 
       {/* Main Content */}
       <Box
+        component="main"
         sx={{
           flex: 1,
           width: '100%',
-          overflowY: 'auto', // Scroll only this area
-          display: 'flex',
-          flexDirection: 'column',
+          overflowY: 'auto',
         }}
       >
         {children}
       </Box>
 
       {/* Footer */}
-      <Footer />
+      <Box sx={{ flexShrink: 0, width: '100%' }}>
+        <Footer />
+      </Box>
     </Box>
   );
 };

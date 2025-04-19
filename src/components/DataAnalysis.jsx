@@ -38,14 +38,12 @@ function DataAnalysis() {
       if (!raw) return null;
       try {
         const parsed = JSON.parse(raw);
-        // If it was just an array, wrap it
         return Array.isArray(parsed) ? { AllData: parsed } : parsed;
       } catch {
         return null;
       }
     };
 
-    // 1) Try localStorage
     const local = loadFromLocal();
     if (local) {
       setData(local);
@@ -56,15 +54,12 @@ function DataAnalysis() {
       return;
     }
 
-    // 2) Otherwise, fetch from your Flask API
     const fetchData = async () => {
       setLoading(true);
       try {
         const url = `${BASE_URL}/api/data`;
         console.log("Fetching data from", url);
-        const response = await fetch(url, {
-          headers: { "Content-Type": "application/json" },
-        });
+        const response = await fetch(url, { headers: { "Content-Type": "application/json" } });
         if (!response.ok) throw new Error(`HTTP ${response.status}`);
         const array = await response.json();
         const wrapped = { AllData: array };
@@ -111,19 +106,19 @@ function DataAnalysis() {
             key={index}
             sx={{
               fontWeight: "bold",
-              background: "linear-gradient(90deg, #ff5722, #ff9800)", // Gradient background
-              color: "#fff", // White text for contrast
+              background: "linear-gradient(90deg, #ff5722, #ff9800)",
+              color: "#fff",
               position: "sticky",
               top: 0,
-              zIndex: 2, // Ensure it remains above scrolling rows
-              padding: "12px 16px", // Spacing for better readability
-              textAlign: "center", // Center-align header text
-              borderBottom: "2px solid #f0f0f0", // Add a subtle bottom border
-              textTransform: "uppercase", // Uppercase for uniform appearance
-              letterSpacing: "0.5px", // Slight spacing between letters
+              zIndex: 2,
+              padding: "12px 16px",
+              textAlign: "center",
+              borderBottom: "2px solid #f0f0f0",
+              textTransform: "uppercase",
+              letterSpacing: "0.5px",
               "&:hover": {
-                background: "linear-gradient(90deg, #ff9800, #ff5722)", // Reverse gradient on hover
-                boxShadow: "0 2px 5px rgba(0,0,0,0.2)", // Add shadow on hover
+                background: "linear-gradient(90deg, #ff9800, #ff5722)",
+                boxShadow: "0 2px 5px rgba(0,0,0,0.2)",
               },
             }}
           >
@@ -133,7 +128,6 @@ function DataAnalysis() {
       </TableRow>
     );
   };
-
 
   const renderTableRows = () => {
     const currentData = getCurrentData();
@@ -166,18 +160,23 @@ function DataAnalysis() {
           flexGrow: 1,
           width: "100%",
         }}
-      ><Typography variant="h6" align="center" sx={{ fontWeight: "bold", color: "#333", marginBottom: 3 }}>
+      >
+        <Typography variant="h6" align="center" sx={{ fontWeight: "bold", color: "#333", mb: 1 }}>
           Individual Data Sets
         </Typography>
+        <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
+          Use the tabs to switch between datasets, adjust rows per page, and navigate pages.
+        </Typography>
+
         <Container
           sx={{
             width: "100%",
             height: "100%",
-            paddingY: 4,
+            py: 4,
           }}
         >
           {tabs.length > 0 && (
-            <Box sx={{ borderBottom: 1, borderColor: "divider", marginBottom: 3 }}>
+            <Box sx={{ borderBottom: 1, borderColor: "divider", mb: 3 }}>
               <Tabs
                 value={activeTab}
                 onChange={handleTabChange}
@@ -195,11 +194,11 @@ function DataAnalysis() {
 
           <Card
             sx={{
-              backgroundColor: "#fff",
+              bgcolor: "#fff",
               boxShadow: 4,
               borderRadius: 4,
-              padding: 3,
-              marginBottom: 3,
+              p: 3,
+              mb: 3,
             }}
           >
             <Box mb={3} display="flex" justifyContent="space-between" alignItems="center">
@@ -226,7 +225,7 @@ function DataAnalysis() {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
-                minHeight: "200px", // Ensure the loader is vertically centered
+                minHeight: "200px",
               }}
             >
               {loading ? (
@@ -251,18 +250,17 @@ function DataAnalysis() {
             </Box>
           </Card>
         </Container>
-        <Box marginTop={4} display="flex" justifyContent="space-between">
-          <Button variant="contained" color="primary" onClick={() => navigate("/")}>
-            Back
-          </Button>
-          <Button variant="contained" color="secondary" onClick={() => navigate("/data-info")}>
-            Next
-          </Button>
-        </Box>
-        <br />
-        <br />
-      </Box>
 
+        <Box mt={4}
+          display="flex"
+          justifyContent="center"
+          sx={{ gap: 1 }}>
+          <Button variant="contained" color="primary" onClick={() => navigate("/")}>Back</Button>
+          <Button variant="contained" color="secondary" onClick={() => navigate("/data-info")}>Next</Button>
+        </Box>
+      </Box>
+      <br />
+      <br />
     </Layout>
   );
 }

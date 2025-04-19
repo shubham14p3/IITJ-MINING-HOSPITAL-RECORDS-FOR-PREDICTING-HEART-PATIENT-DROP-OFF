@@ -1,79 +1,47 @@
 import React from 'react';
-import { Box, Typography, Grid, Link, IconButton } from '@mui/material';
-import { GitHub, LinkedIn, Facebook, Instagram } from '@mui/icons-material';
+import { Box, Typography } from '@mui/material';
 import logo from '../Design-of-New-Logo-of-IITJ-2.png';
 
-function Footer() {
+const contributors = [
+  { name: 'Shubham Raj', id: 'M24DE3076' },
+  { name: 'Suraj Mourya', id: 'G23AI2116' },
+  { name: 'Jatin Shrivas', id: 'G23AI2094' },
+];
+
+export default function Footer() {
   return (
     <Box
+      component="footer"
       sx={{
-        backgroundColor: '#f0f0f0',
-        width: '100%',
-        padding: '0.5rem 2rem',
+        bgcolor: '#f0f0f0',
+        width: '95vw',
+        py: 1,
+        px: 2,
         borderTop: '1px solid #ddd',
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
       }}
     >
-      {/* Left Section: Logo and Title */}
-      <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-        <Box
-          sx={{
-            backgroundColor: 'white',
-            padding: '0.2rem',
-            borderRadius: '5px',
-          }}
-        >
-          <img
-            src={logo}
-            alt="IITJ Logo"
-            width="40"
-          />
+      {/* Logo + Title */}
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        <Box sx={{ bgcolor: '#fff', p: 0.5, borderRadius: 1 }}>
+          <img src={logo} alt="IITJ Logo" width={40} />
         </Box>
-        <Typography variant="body2" sx={{ fontWeight: 'bold', color: 'gray' }}>
-          © 2025 IITJ - MINING HOSPITAL RECORDS FOR PREDICTING PATIENT DROP-OFF
+        <Typography variant="body2" color="text.secondary" sx={{ fontWeight: 'bold', ml: 1 }}>
+          © 2025 IITJ – Mining Hospital Records for Predicting Patient Drop‑off
         </Typography>
       </Box>
 
-      {/* Right Section: Contributors and Social Links */}
-      <Box
-        sx={{
-          marginRight: '10%',
-        }}
-      >
-        <Typography variant="body2" sx={{ fontWeight: 'bold', mb: 0.5 }}>
-          Contributors:
-        </Typography>
-        <Grid container spacing={2} sx={{ alignItems: 'center' }}>
-          <Grid item>
-            <Typography variant="body2">Shubham Raj</Typography>
-            <Typography variant="body4">M24DE3076</Typography>
-            {/* <Box sx={{ display: 'flex', gap: 1 }}>
-              <IconButton href="https://github.com/shubham14p3" target="_blank" color="inherit">
-                <GitHub />
-              </IconButton>
-              <IconButton href="https://linkedin.com/in/shubham14p3" target="_blank" color="inherit">
-                <LinkedIn />
-              </IconButton>
-              <IconButton href="https://facebook.com/shubham14p3" target="_blank" color="inherit">
-                <Facebook />
-              </IconButton>
-            </Box> */}
-          </Grid>
-          <Grid item>
-          <Typography variant="body2">SURAJ MOURYA</Typography>
-          <Typography variant="body4"></Typography>
-          </Grid>
-          <Grid item>
-          <Typography variant="body2">JATIN SHRIVAS</Typography>
-          <Typography variant="body4"></Typography>
-          </Grid>
-
-        </Grid>
+      {/* Contributors */}
+      <Box sx={{ display: 'flex', gap: 2 }}>
+        {contributors.map(({ name, id }) => (
+          <Box key={id} sx={{ textAlign: 'center' }}>
+            <Typography variant="body2">{name}</Typography>
+            <Typography variant="caption">{id}</Typography>
+          </Box>
+        ))}
       </Box>
     </Box>
   );
 }
-
-export default Footer;

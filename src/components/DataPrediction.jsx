@@ -19,6 +19,7 @@ import {
     DialogTitle,
     DialogContent,
     DialogActions,
+    Paper,
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -378,27 +379,51 @@ export default function DataPrediction() {
 
     return (
         <Layout>
-            <Container maxWidth={false}
+            <Container
+                maxWidth={false}
                 disableGutters
-                sx={{ py: '20px', backgroundColor: '#f0f2f5', minHeight: '100vh' }}>
-                <Typography variant="h4" gutterBottom sx={{ fontWeight: 'bold', textAlign: 'center', mb: 4 }}>
+                sx={{
+                    py: 4,
+                    px: { xs: 2, md: 4 },
+                    background: 'linear-gradient(135deg, #e3f2fd 30%, #ffffff 100%)',
+                    minHeight: '100vh'
+                }}
+            >
+                <Typography
+                    variant="h4"
+                    gutterBottom
+                    sx={{
+                        fontWeight: 'bold',
+                        textAlign: 'center',
+                        mb: 4,
+                        color: 'primary.main'
+                    }}
+                >
                     Heart Disease Predictor
                 </Typography>
 
-                <Grid container spacing={3}>
-                    {/* Form */}
+                <Grid container spacing={4}>
+                    {/* Main Form */}
                     <Grid item xs={12} md={8}>
-                        <Card sx={{ p: 4, mb: 4, backgroundColor: '#fff', boxShadow: 3, borderRadius: 2 }}>
+                        <Paper
+                            elevation={6}
+                            sx={{
+                                p: 4,
+                                backgroundColor: 'white',
+                                borderRadius: 4
+                            }}
+                        >
                             <Box component="form" onSubmit={handleSubmit}>
-                                <Grid container spacing={3}>
-                                    {/* Model selector */}
-                                    <Grid item xs={12} md={6}>
-                                        <FormControl fullWidth>
-                                            <InputLabel id="model-label">Choose Model</InputLabel>
+                                <Grid container spacing={2}>
+                                    {/* Model Selector */}
+                                    <Grid item xs={12}  >
+                                        <FormControl fullWidth variant="outlined">
+                                            <InputLabel id="model-label">Model
+                                            </InputLabel>
                                             <Select
                                                 labelId="model-label"
+                                                label="Model"
                                                 value={model}
-                                                label="Choose Model"
                                                 onChange={e => {
                                                     setModel(e.target.value);
                                                     setResult(null);
@@ -415,33 +440,31 @@ export default function DataPrediction() {
                                                     'xgboost'
                                                 ].map(m => (
                                                     <MenuItem key={m} value={m}>
-                                                        {m.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                                        {m.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                                                     </MenuItem>
                                                 ))}
                                             </Select>
                                         </FormControl>
                                     </Grid>
 
-                                    {/* Fields */}
+                                    {/* Feature Fields */}
                                     {fieldConfigs.map(cfg => (
-                                        <Grid
-                                            item
-                                            xs={12}
-                                            sm={6}
-                                            md={4}
-                                            key={cfg.name}
-                                            onMouseEnter={() => setHoveredField(cfg.name)}
-                                            onMouseLeave={() => setHoveredField(null)}
-                                        >
+                                        <Grid item xs={12} sm={6} key={cfg.name}>
                                             {cfg.inputType === 'select' ? (
-                                                <FormControl fullWidth error={!!errors[cfg.name]}>
+                                                <FormControl
+                                                    fullWidth
+                                                    variant="outlined"
+                                                    error={!!errors[cfg.name]}
+                                                    sx={{ mb: 2 }}
+                                                >
                                                     <InputLabel id={`${cfg.name}-label`}>{cfg.label}</InputLabel>
                                                     <Select
                                                         labelId={`${cfg.name}-label`}
+                                                        label={cfg.label}
                                                         name={cfg.name}
                                                         value={features[cfg.name]}
-                                                        label={cfg.label}
                                                         onChange={handleChange}
+                                                        onBlur={handleBlur}
                                                     >
                                                         <MenuItem disabled value="">
                                                             Select {cfg.label}
@@ -452,28 +475,15 @@ export default function DataPrediction() {
                                                             </MenuItem>
                                                         ))}
                                                     </Select>
-                                                    <FormHelperText
-                                                        component="div"              // render as a div so inline‑flex works predictably
-                                                        sx={{
-                                                            display: 'inline-flex',    // only as big as its contents
-                                                            alignItems: 'center',
-                                                            ml: 'auto',                // push to the right edge
-                                                            minHeight: '1em',          // keep the line‑height nice
-                                                            whiteSpace: 'nowrap',      // prevent any wrapping
-                                                        }}
-                                                    >
-                                                        {errors[cfg.name] ? (
-                                                            errors[cfg.name]
-                                                        ) : (
-                                                            <Tooltip title={cfg.tooltip} arrow>
-                                                                <InfoOutlinedIcon fontSize="small" />
-                                                            </Tooltip>
-                                                        )}
+                                                    <FormHelperText>
+                                                        {errors[cfg.name] || cfg.tooltip}
                                                     </FormHelperText>
                                                 </FormControl>
                                             ) : (
                                                 <TextField
                                                     fullWidth
+                                                    variant="outlined"
+                                                    margin="normal"
                                                     name={cfg.name}
                                                     type={cfg.inputType === 'number' ? 'number' : 'text'}
                                                     label={cfg.label}
@@ -482,30 +492,42 @@ export default function DataPrediction() {
                                                     onBlur={handleBlur}
                                                     error={!!errors[cfg.name]}
                                                     helperText={errors[cfg.name] || cfg.tooltip}
-                                                    {...(cfg.inputType === 'number'
-                                                        ? { inputProps: { min: cfg.min, max: cfg.max, step: cfg.step || 1 } }
-                                                        : {})}
+                                                    inputProps={{
+                                                        ...(cfg.inputType === 'number'
+                                                            ? { min: cfg.min, max: cfg.max, step: cfg.step || 1 }
+                                                            : {})
+                                                    }}
+                                                    sx={{ mb: 1 }}
                                                 />
                                             )}
                                         </Grid>
                                     ))}
 
-                                    {/* Submit */}
+                                    {/* Submit Button */}
                                     <Grid item xs={12} textAlign="center">
-                                        <Button type="submit" variant="contained" color="primary" size="large" disabled={loading}>
+                                        <Button
+                                            type="submit"
+                                            variant="contained"
+                                            size="large"
+                                            sx={{ mt: 2, borderRadius: 3, px: 5 }}
+                                            disabled={loading}
+                                        >
                                             {loading ? <CircularProgress size={24} /> : 'Predict'}
                                         </Button>
                                     </Grid>
                                 </Grid>
                             </Box>
-                        </Card>
+                        </Paper>
                     </Grid>
 
-                    {/* Sidebar */}
+                    {/* Help Sidebar */}
                     <Grid item xs={12} md={4}>
-                        <HelpSidebar hoveredField={hoveredField} />
+                        <Paper elevation={3} sx={{ p: 2, borderRadius: 3, backgroundColor: '#fafafa' }}>
+                            <HelpSidebar hoveredField={hoveredField} />
+                        </Paper>
                     </Grid>
                 </Grid>
+
 
                 {/* Result Modal */}
                 {result && (
@@ -571,7 +593,10 @@ export default function DataPrediction() {
                     </Dialog>
                 )}
                 {/* Navigation Buttons */}
-                <Box mt={4} display="flex" justifyContent="space-between">
+                <Box mt={4}
+                    display="flex"
+                    justifyContent="center"
+                    sx={{ gap: 1 }}>
                     <Button variant="contained" color="primary" onClick={() => navigate('/data-clean')}>
                         Back
                     </Button>
@@ -582,6 +607,7 @@ export default function DataPrediction() {
                         Next
                     </Button>
                 </Box>
+                <br />
                 <br />
             </Container>
 

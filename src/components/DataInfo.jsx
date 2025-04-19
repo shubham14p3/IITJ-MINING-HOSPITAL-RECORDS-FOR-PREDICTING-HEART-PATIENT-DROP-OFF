@@ -19,6 +19,7 @@ export default function DataInfo() {
     const [info, setInfo] = useState([]);
     const [stats, setStats] = useState({});
     const navigate = useNavigate();
+
     useEffect(() => {
         const fetchInfo = async () => {
             try {
@@ -36,7 +37,6 @@ export default function DataInfo() {
     const statKeys = Object.keys(stats);
     const metricNames = statKeys.length ? Object.keys(stats[statKeys[0]]) : [];
 
-    // shared header-cell style
     const headerCellStyle = {
         fontWeight: 'bold',
         background: 'linear-gradient(90deg, #ff5722, #ff9800)',
@@ -60,8 +60,11 @@ export default function DataInfo() {
             <Container sx={{ py: 4 }}>
 
                 {/* Column Info Section */}
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}>
+                <Typography variant="h6" align="center" sx={{ fontWeight: 'bold', mb: 1 }}>
                     Column Info
+                </Typography>
+                <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
+                    Lists each column with how many entries are filled and the data type.
                 </Typography>
                 <Card sx={{ mb: 4, p: 3, boxShadow: 4, borderRadius: 4 }}>
                     <Box sx={{ maxHeight: '300px', overflowY: 'auto', overflowX: 'auto' }}>
@@ -87,8 +90,11 @@ export default function DataInfo() {
                 </Card>
 
                 {/* Summary Stats Section */}
-                <Typography variant="h6" gutterBottom sx={{ fontWeight: 'bold', mb: 2 }}>
+                <Typography variant="h6" align="center" sx={{ fontWeight: 'bold', mb: 1 }}>
                     Summary Stats
+                </Typography>
+                <Typography variant="body2" align="center" color="text.secondary" sx={{ mb: 3 }}>
+                    Shows key statistics (like mean, min, max) for each numeric column.
                 </Typography>
                 {statKeys.length > 0 && (
                     <Card sx={{ p: 3, boxShadow: 4, borderRadius: 4 }}>
@@ -119,7 +125,10 @@ export default function DataInfo() {
                     </Card>
                 )}
             </Container>
-            <Box marginTop={4} display="flex" justifyContent="space-between">
+            <Box mt={4}
+                display="flex"
+                justifyContent="center"
+                sx={{ gap: 1 }}>
                 <Button variant="contained" color="primary" onClick={() => navigate("/data-analysis")}>
                     Back
                 </Button>
@@ -127,6 +136,8 @@ export default function DataInfo() {
                     Next
                 </Button>
             </Box>
+            <br />
+            <br />
         </Layout>
     );
 }
