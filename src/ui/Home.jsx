@@ -44,7 +44,7 @@ function Home() {
   };
 
   const handleNext = () => {
-    // navigate("/data-analysis"); // Navigate to the data analysis component
+    navigate("/data-analysis"); // Navigate to the data analysis component
   };
 
   return (
