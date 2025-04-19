@@ -115,7 +115,7 @@ export default function DataCleaning() {
                 <Button variant="contained" color="primary" onClick={() => navigate("/data-info")}>
                     Back
                 </Button>
-                <Button variant="contained" color="secondary" onClick={() => navigate("/data-info")}>
+                <Button variant="contained" color="secondary" onClick={() => navigate("/data-visualization")}>
                     Next
                 </Button>
             </Box>

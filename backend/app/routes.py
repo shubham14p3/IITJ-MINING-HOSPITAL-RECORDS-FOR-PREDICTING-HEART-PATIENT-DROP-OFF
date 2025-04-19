@@ -177,3 +177,27 @@ def data_clean():
         'missing': missing,
         'correlation': correlation
     })
+
+@bp.route('/data/corr', methods=['GET'])
+def data_corr():
+    """
+    GET /api/data/corr -> returns the full correlation matrix as JSON
+    """
+    df = load_data()
+    correlation = df.corr().to_dict()
+    return jsonify({'correlation': correlation})
+
+
+@bp.route('/data/hist', methods=['GET'])
+def data_hist():
+    """
+    GET /api/data/hist -> returns a PNG of feature histograms
+    """
+    df = load_data()
+    fig = plt.figure(figsize=(15,15))
+    df.hist(edgecolor='black', ax=fig.subplots())
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+    plt.close(fig)
+    return send_file(buf, mimetype='image/png')
