@@ -256,6 +256,7 @@ function DataAnalysis() {
           justifyContent="center"
           sx={{ gap: 1 }}>
           <Button variant="contained" color="primary" onClick={() => navigate("/")}>Back</Button>
+          <Button variant="contained" color="primary" onClick={() => navigate("/predict")}>Predition</Button>
           <Button variant="contained" color="secondary" onClick={() => navigate("/data-info")}>Next</Button>
         </Box>
       </Box>

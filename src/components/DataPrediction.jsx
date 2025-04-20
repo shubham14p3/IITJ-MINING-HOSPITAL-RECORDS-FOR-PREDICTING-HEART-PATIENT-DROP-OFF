@@ -212,20 +212,54 @@ function HelpSidebar({ hoveredField }) {
                 <>
                     <CardMedia
                         component="img"
-                        height="140"
                         image={help.imgUrl}
                         alt={help.title}
+                        sx={{
+                            width: '100%',
+                            height: 500,
+                            objectFit: 'cover', // or 'contain' if you want padding effect
+                            borderRadius: 2,
+                        }}
                     />
-                    <Box sx={{ pt: 1 }}>
-                        <Typography variant="h6" gutterBottom>
+                    <Box
+                        sx={{
+                            pt: 2,
+                            textAlign: 'center',
+                            px: 2,
+                        }}
+                    >
+                        <Typography
+                            variant="h6"
+                            gutterBottom
+                            sx={{
+                                fontWeight: 'bold',
+                                fontSize: '1.25rem',
+                                color: 'primary.main',
+                                borderBottom: '2px solid #1976d2',
+                                display: 'inline-block',
+                                mb: 2,
+                            }}
+                        >
                             {help.title}
                         </Typography>
+
                         {help.body.split('\n').map((line, idx) => (
-                            <Typography key={idx} variant="body2" sx={{ whiteSpace: 'pre-line' }}>
+                            <Typography
+                                key={idx}
+                                variant="body2"
+                                sx={{
+                                    fontSize: '0.95rem',
+                                    fontWeight: 500,
+                                    color: '#333',
+                                    whiteSpace: 'pre-line',
+                                    mb: 1,
+                                }}
+                            >
                                 {line}
                             </Typography>
                         ))}
                     </Box>
+
                 </>
             ) : (
                 <Typography variant="body2" sx={{ textAlign: 'center', mt: 4 }}>
@@ -456,6 +490,8 @@ export default function DataPrediction() {
                                                     variant="outlined"
                                                     error={!!errors[cfg.name]}
                                                     sx={{ mb: 2 }}
+                                                    onMouseEnter={() => setHoveredField(cfg.name)}
+                                                    onMouseLeave={() => setHoveredField(null)}
                                                 >
                                                     <InputLabel id={`${cfg.name}-label`}>{cfg.label}</InputLabel>
                                                     <Select
@@ -498,8 +534,11 @@ export default function DataPrediction() {
                                                             : {})
                                                     }}
                                                     sx={{ mb: 1 }}
+                                                    onMouseEnter={() => setHoveredField(cfg.name)}
+                                                    onMouseLeave={() => setHoveredField(null)}
                                                 />
                                             )}
+
                                         </Grid>
                                     ))}
 

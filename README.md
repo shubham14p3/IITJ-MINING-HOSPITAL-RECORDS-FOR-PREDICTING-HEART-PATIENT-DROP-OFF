@@ -39,7 +39,7 @@ User Name : **admin** || Password: **admin**
 
 1. **Create a Virtual Environment**:
     ```bash
-    python -m venv venv
+    python3.10 -m venv veenv
     ```
 
 2. **Activate Virtual Environment**:
@@ -55,6 +55,10 @@ User Name : **admin** || Password: **admin**
      ```bash
      source venv/Scripts/activate
      ```
+
+# Install requirements
+python -m pip install --upgrade pip setuptools wheel
+pip install -r requirements.txt
 
 #### Step 2: Install Python Dependencies
 Install the required Python packages using the `requirements.txt` file:
