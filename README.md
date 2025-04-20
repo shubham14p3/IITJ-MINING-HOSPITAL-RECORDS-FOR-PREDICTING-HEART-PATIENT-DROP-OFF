@@ -25,8 +25,8 @@ This project focuses on cleaning, processing, and performing advanced analysis o
 ---
 
 ## Live Project Links
-- **UI:** [http://3.222.77.245:5173/](http://3.222.77.245:5173/)
-- **Backend:** [http://44.198.64.142:5000/](http://44.198.64.142:5000/)
+- **UI:** [http://13.51.18.127:5173/](http://13.51.18.127:5173/)
+- **Backend:** [http://13.49.123.34:5000/api/data](http://13.49.123.34:5000/api/data)
 
 User Name : **admin** || Password: **admin** 
 ---
