@@ -114,7 +114,16 @@ project-root/
 ├── package.json            # Node.js dependencies
 ├── vite.config.js          # Vite configuration
 ```
-
+Model | Accuracy (%)
+Logistic Regression | 78.69
+Support Vector Machine | 77.04
+Naive Bayes | 72.13
+Decision Tree | 72.13
+K-Nearest Neighbors | 54.10
+Linear Regression | 24.35
+Random Forest Regressor | 29.76
+Gradient Boosting Regr. | 26.14
+XGBoost | 16.39
 ---
 
 ## Features
