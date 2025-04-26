@@ -20,7 +20,7 @@ bp = Blueprint('api', __name__, url_prefix='/api')
 
 # Load and cache data once
 _df = None
-def load_data():
+def load_data(clean=True):
     global _df
     if _df is None:
         data_path = current_app.config.get('DATA_PATH')
@@ -31,8 +31,22 @@ def load_data():
         for chunk in pd.read_csv(data_path, chunksize=5000):
             chunks.append(chunk)
         _df = pd.concat(chunks, ignore_index=True)
-    return _df
+    df = _df.copy()
+    if clean:
+        df = clean_data(df)
+    return df
 
+def clean_data(df):
+    """Apply cleaning steps: drop 'fbs', fillna with mean, remove negatives."""
+    df = df.drop('fbs', axis=1, errors='ignore')
+    df = df.fillna(df.mean())
+    if 'age' in df.columns:
+        df = df[df['age'] >= 0]
+    if 'trestbps' in df.columns:
+        df = df[df['trestbps'] >= 0]
+    if 'chol' in df.columns:
+        df = df[df['chol'] >= 0]
+    return df
 
 # Helper: split once
 _splits = {}
@@ -45,7 +59,7 @@ def get_splits():
             train_test_split(X, y, test_size=0.2, random_state=42)
     return _splits
 
-# Generic train utilities
+# Model definitions
 models = {
     'linear_regression': LinearRegression,
     'logistic_regression': lambda: LogisticRegression(max_iter=1000),
@@ -61,14 +75,10 @@ models = {
 
 @bp.route('/<model_name>', methods=['GET'])
 def model_plot(model_name):
-    """
-    GET /api/<model_name> -> returns PNG plot of model performance
-    """
     if model_name not in models:
         abort(404, description="Model not supported")
     splits = get_splits()
     model = models[model_name]() if callable(models[model_name]) else models[model_name]
-    # Choose classification vs regression
     if model_name in ['linear_regression', 'random_forest', 'gradient_boosting', 'xgboost']:
         buf = _plot_regression(model, model_name.replace('_', ' ').title())
     else:
@@ -77,37 +87,28 @@ def model_plot(model_name):
 
 @bp.route('/<model_name>/predict', methods=['POST'])
 def model_predict(model_name):
-    """
-    POST /api/<model_name>/predict
-    JSON body: feature key:value pairs
-    Returns JSON with prediction and, if available, probability
-    """
     if model_name not in models:
         abort(404, description="Model not supported")
     data = request.get_json()
     if not data:
-        abort(400, description=" JSON body required with feature values ")
-    # Prepare input
+        abort(400, description="JSON body required with feature values")
     df = load_data()
     feature_cols = df.drop('target', axis=1).columns.tolist()
     try:
-        input_df = pd.DataFrame([ {col: data[col] for col in feature_cols} ])
+        input_df = pd.DataFrame([{col: data[col] for col in feature_cols}])
     except KeyError as e:
         abort(400, description=f"Missing feature: {e}")
-    # Train model
     splits = get_splits()
     model = models[model_name]() if callable(models[model_name]) else models[model_name]
     model.fit(splits['X_train'], splits['y_train'])
     pred = model.predict(input_df)
     result = {'prediction': int(pred[0])}
-    # Add probability for classifiers
     if hasattr(model, 'predict_proba'):
         proba = model.predict_proba(input_df)[0].tolist()
         result['probability'] = proba
     return jsonify(result)
 
-# Internal plotting functions
-
+# Internal plotting
 def _plot_regression(model, name):
     splits = get_splits()
     model.fit(splits['X_train'], splits['y_train'])
@@ -120,7 +121,10 @@ def _plot_regression(model, name):
     ax.set_xlabel('Actual')
     ax.set_ylabel('Predicted')
     ax.set_title(f'{name} (R2 = {score:.2f})')
-    buf = io.BytesIO(); fig.savefig(buf, format='png', bbox_inches='tight'); buf.seek(0); plt.close(fig)
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+    plt.close(fig)
     return buf
 
 def _plot_classification(model, name):
@@ -131,29 +135,25 @@ def _plot_classification(model, name):
     cm = confusion_matrix(splits['y_test'], preds)
     fig, ax = plt.subplots()
     sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', ax=ax)
-    ax.set_xlabel('Predicted'); ax.set_ylabel('Actual'); ax.set_title(f'{name} (Accuracy = {acc:.2f})')
-    buf = io.BytesIO(); fig.savefig(buf, format='png', bbox_inches='tight'); buf.seek(0); plt.close(fig)
+    ax.set_xlabel('Predicted')
+    ax.set_ylabel('Actual')
+    ax.set_title(f'{name} (Accuracy = {acc:.2f})')
+    buf = io.BytesIO()
+    fig.savefig(buf, format='png', bbox_inches='tight')
+    buf.seek(0)
+    plt.close(fig)
     return buf
 
+# Data routes
 @bp.route('/data', methods=['GET'])
 def data():
-    """
-    GET /api/data -> returns the entire CSV as JSON
-    """
-    df = load_data()  # loads and caches your CSV
-    # convert to list‑of‑dicts
+    df = load_data()
     records = df.to_dict(orient='records')
     return jsonify(records)
 
-# app/routes.py
-
 @bp.route('/data/info', methods=['GET'])
 def data_info():
-    """
-    GET /api/data/info -> returns column metadata and describe() stats as JSON
-    """
     df = load_data()
-    # column info
     info = [
         {
             'column': col,
@@ -162,40 +162,16 @@ def data_info():
         }
         for col in df.columns
     ]
-    # summary statistics
     describe = df.describe().to_dict()
-    return jsonify({
-        'info': info,
-        'describe': describe
-    })
+    return jsonify({'info': info, 'describe': describe})
 
 @bp.route('/data/clean', methods=['GET'])
 def data_clean():
-    """
-    GET /api/data/clean -> returns missing‑value counts, performs basic cleaning, and correlation matrix (after dropping 'fbs').
-    """
-    df = load_data()
+    df = _df.copy() if _df is not None else load_data(clean=False)
     missing_before = df.isnull().sum().to_dict()
-
-    # 1. Drop 'fbs' column if exists
-    df = df.drop('fbs', axis=1, errors='ignore')
-
-    # 2. Fill missing values with column mean
-    df = df.fillna(df.mean())
-
-    # 3. Remove invalid rows (example: negative age or BP)
-    if 'age' in df.columns:
-        df = df[df['age'] >= 0]
-    if 'trestbps' in df.columns:
-        df = df[df['trestbps'] >= 0]
-    if 'chol' in df.columns:
-        df = df[df['chol'] >= 0]
-
+    df = clean_data(df)
     missing_after = df.isnull().sum().to_dict()
-
-    # 4. Correlation after cleaning
     correlation = df.corr().to_dict()
-
     return jsonify({
         'missing_before': missing_before,
         'missing_after': missing_after,
@@ -207,40 +183,51 @@ def data_clean():
         ]
     })
 
-
 @bp.route('/data/corr', methods=['GET'])
 def data_corr():
-    """
-    GET /api/data/corr -> returns the full correlation matrix as JSON
-    """
     df = load_data()
     correlation = df.corr().to_dict()
     return jsonify({'correlation': correlation})
 
-
 @bp.route('/data/hist', methods=['GET'])
 def data_hist():
-    """
-    GET /api/data/hist -> returns a PNG of feature histograms
-    """
     df = load_data()
-    fig = plt.figure(figsize=(15,15))
-    df.hist(edgecolor='black', ax=fig.subplots())
+    fig, axes = plt.subplots(nrows=(len(df.columns) + 2) // 3, ncols=3, figsize=(15, 10))
+    axes = axes.flatten()
+    for i, col in enumerate(df.columns):
+        df[col].hist(ax=axes[i], edgecolor='black')
+        axes[i].set_title(col)
+    for j in range(i + 1, len(axes)):
+        fig.delaxes(axes[j])
     buf = io.BytesIO()
+    fig.tight_layout()
     fig.savefig(buf, format='png', bbox_inches='tight')
     buf.seek(0)
     plt.close(fig)
     return send_file(buf, mimetype='image/png')
 
-def load_data():
-    global _df
-    if _df is None:
-        data_path = current_app.config.get('DATA_PATH')
-        if not data_path or not os.path.exists(data_path):
-            abort(500, description=f"Dataset not found at {data_path}")
-        # Chunked reading to simulate big data
-        chunks = []
-        for chunk in pd.read_csv(data_path, chunksize=5000):
-            chunks.append(chunk)
-        _df = pd.concat(chunks, ignore_index=True)
-    return _df
+@bp.route('/metrics', methods=['GET'])
+def model_metrics():
+    splits = get_splits()
+    X_train, X_test = splits['X_train'].copy(), splits['X_test'].copy()
+    y_train, y_test = splits['y_train'], splits['y_test']
+
+    results = {}
+    for name, factory in models.items():
+        model = factory() if callable(factory) else factory
+        model.fit(X_train, y_train)
+        preds = model.predict(X_test)
+
+        if hasattr(model, "predict_proba"):
+            score = accuracy_score(y_test, preds)
+            metric = "accuracy"
+        else:
+            score = r2_score(y_test, preds)
+            metric = "r2"
+
+        results[name] = {
+            "metric": metric,
+            "score": round(float(score), 4)
+        }
+
+    return jsonify(results)

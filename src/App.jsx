@@ -6,6 +6,7 @@ import DataInfo from './components/DataInfo';
 import DataCleaning from './components/DataCleaning';
 import DataVisualization from './components/DataVisualization';
 import DataPrediction from './components/DataPrediction';
+import CompareModels from './components/CompareModels';
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <Route path="/data-clean" element={<DataCleaning />} />
         <Route path="/data-visualization" element={<DataVisualization />} />
         <Route path="/predict" element={<DataPrediction />} />
+        <Route path="/compare-models" element={<CompareModels />} />
         {/* Catch-all route for 404 */}
         <Route path="*" element={<Page404 />} />
       </Routes>

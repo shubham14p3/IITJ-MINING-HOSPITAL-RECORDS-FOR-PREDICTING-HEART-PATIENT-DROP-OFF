@@ -114,16 +114,6 @@ project-root/
 ├── package.json            # Node.js dependencies
 ├── vite.config.js          # Vite configuration
 ```
-Model | Accuracy (%)
-Logistic Regression | 78.69
-Support Vector Machine | 77.04
-Naive Bayes | 72.13
-Decision Tree | 72.13
-K-Nearest Neighbors | 54.10
-Linear Regression | 24.35
-Random Forest Regressor | 29.76
-Gradient Boosting Regr. | 26.14
-XGBoost | 16.39
 ---
 
 ## Features
@@ -185,7 +175,107 @@ XGBoost | 16.39
 ### Prediction Results PDF
 ![Prediction Results](assets/predictionResultPDF.JPG)
 
+### Comparing Models
+![Comparing Models](assets/16.JPG)
+
 ---
+
+# Model Evaluation Summary
+
+This project evaluates different machine learning models on a given dataset.  
+The performance metrics and scores are summarized below:
+
+| Model                | Metric    | Score  |
+|----------------------|-----------|--------|
+| Decision Tree        | Accuracy  | 1.0000 |
+| Gradient Boosting    | R² Score  | 0.9302 |
+| Linear Regression    | R² Score  | 0.4409 |
+| Logistic Regression  | Accuracy  | 0.7941 |
+| Naive Bayes          | Accuracy  | 0.7904 |
+| Random Forest        | R² Score  | 0.9905 |
+| Support Vector Machine (SVM) | Accuracy  | 0.7868 |
+| XGBoost              | R² Score  | 0.3456 |
+
+---
+
+## Detailed Model Insights
+
+### Decision Tree
+- **Metric:** Accuracy
+- **Score:** 1.0 (100%)
+- **Insight:**  
+  Achieved perfect classification on the dataset.  
+  However, 100% accuracy often suggests overfitting and poor generalization to new data.
+
+---
+
+### Gradient Boosting
+- **Metric:** R² Score
+- **Score:** 0.9302
+- **Insight:**  
+  Explained 93.02% of the variance in the target variable, indicating strong performance for regression tasks.
+
+---
+
+### Linear Regression
+- **Metric:** R² Score
+- **Score:** 0.4409
+- **Insight:**  
+  Explained only 44.09% of the variance.  
+  Indicates a weak linear relationship or missing important features.
+
+---
+
+### Logistic Regression
+- **Metric:** Accuracy
+- **Score:** 0.7941
+- **Insight:**  
+  Achieved 79.41% accuracy, showing decent classification performance with room for further improvement.
+
+---
+
+### Naive Bayes
+- **Metric:** Accuracy
+- **Score:** 0.7904
+- **Insight:**  
+  Achieved 79.04% accuracy, slightly lower than Logistic Regression but quite effective given its simplicity.
+
+---
+
+### Random Forest
+- **Metric:** R² Score
+- **Score:** 0.9905
+- **Insight:**  
+  Explained 99.05% of the variance.  
+  Very strong regression performance, but potential overfitting should be checked.
+
+---
+
+### Support Vector Machine (SVM)
+- **Metric:** Accuracy
+- **Score:** 0.7868
+- **Insight:**  
+  Achieved 78.68% accuracy, slightly lower than Logistic Regression and Naive Bayes.
+
+---
+
+### XGBoost
+- **Metric:** R² Score
+- **Score:** 0.3456
+- **Insight:**  
+  Explained only 34.56% of the variance.  
+  Unusually low performance for XGBoost, possibly due to suboptimal hyperparameters or noisy data.
+
+---
+
+## Conclusion
+- **Random Forest** and **Gradient Boosting** show excellent results.
+- **Decision Tree** achieves perfect training accuracy but might overfit.
+- **Linear Regression** and **XGBoost** underperform and may need feature engineering or model tuning.
+- **Logistic Regression**, **Naive Bayes**, and **SVM** provide moderate classification performance.
+
+---
+
 
 ## Technologies Used
 
