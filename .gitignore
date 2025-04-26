@@ -13,7 +13,6 @@ dist-ssr
 *.local
 *.venv
 backend/venv
-backend
 backend/app/secrets.py
 
 # Editor directories and files

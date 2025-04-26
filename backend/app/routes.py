@@ -26,8 +26,13 @@ def load_data():
         data_path = current_app.config.get('DATA_PATH')
         if not data_path or not os.path.exists(data_path):
             abort(500, description=f"Dataset not found at {data_path}")
-        _df = pd.read_csv(data_path)
+        # Chunked reading to simulate big data
+        chunks = []
+        for chunk in pd.read_csv(data_path, chunksize=5000):
+            chunks.append(chunk)
+        _df = pd.concat(chunks, ignore_index=True)
     return _df
+
 
 # Helper: split once
 _splits = {}
@@ -167,16 +172,41 @@ def data_info():
 @bp.route('/data/clean', methods=['GET'])
 def data_clean():
     """
-    GET /api/data/clean -> returns missing‑value counts and correlation matrix (after dropping 'fbs').
+    GET /api/data/clean -> returns missing‑value counts, performs basic cleaning, and correlation matrix (after dropping 'fbs').
     """
     df = load_data()
-    missing = df.isnull().sum().to_dict()
-    df2 = df.drop('fbs', axis=1)
-    correlation = df2.corr().to_dict()
+    missing_before = df.isnull().sum().to_dict()
+
+    # 1. Drop 'fbs' column if exists
+    df = df.drop('fbs', axis=1, errors='ignore')
+
+    # 2. Fill missing values with column mean
+    df = df.fillna(df.mean())
+
+    # 3. Remove invalid rows (example: negative age or BP)
+    if 'age' in df.columns:
+        df = df[df['age'] >= 0]
+    if 'trestbps' in df.columns:
+        df = df[df['trestbps'] >= 0]
+    if 'chol' in df.columns:
+        df = df[df['chol'] >= 0]
+
+    missing_after = df.isnull().sum().to_dict()
+
+    # 4. Correlation after cleaning
+    correlation = df.corr().to_dict()
+
     return jsonify({
-        'missing': missing,
-        'correlation': correlation
+        'missing_before': missing_before,
+        'missing_after': missing_after,
+        'correlation': correlation,
+        'cleaning_steps': [
+            "Dropped column: fbs",
+            "Filled missing values with column mean",
+            "Removed rows with negative age, BP, or cholesterol"
+        ]
     })
+
 
 @bp.route('/data/corr', methods=['GET'])
 def data_corr():
@@ -201,3 +231,16 @@ def data_hist():
     buf.seek(0)
     plt.close(fig)
     return send_file(buf, mimetype='image/png')
+
+def load_data():
+    global _df
+    if _df is None:
+        data_path = current_app.config.get('DATA_PATH')
+        if not data_path or not os.path.exists(data_path):
+            abort(500, description=f"Dataset not found at {data_path}")
+        # Chunked reading to simulate big data
+        chunks = []
+        for chunk in pd.read_csv(data_path, chunksize=5000):
+            chunks.append(chunk)
+        _df = pd.concat(chunks, ignore_index=True)
+    return _df
